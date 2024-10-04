@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Test_F3_Createx2B(t *testing.T) {
+func Test_F3_Createx3B(t *testing.T) {
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s  sslmode=disable", "localhost", "5432",
 		"postgres_test", "xxxxxxx", "yyyyyy")
 
@@ -31,13 +31,11 @@ func Test_F3_Createx2B(t *testing.T) {
 			return err
 		}
 
-		loc, _ := time.LoadLocation("Asia/Jakarta")
-		ts := time.Now().In(loc)
+		ts := time.Now().UTC()
 		data := model.Foreign3{
-			Timestamp: ts,
-			//Device_PID: &log.ID,
+			Timestamp:  ts,
 			Device_UID: log,
-			Data:       1,
+			Data:       2,
 		}
 
 		err = data.Create(dbt)
@@ -47,11 +45,11 @@ func Test_F3_Createx2B(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 }
 
-func Test_F3_Findx1A(t *testing.T) {
+func Test_F3_Findx(t *testing.T) {
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s  sslmode=disable", "localhost", "5432",
 		"postgres_test", "xxxxxxx", "yyyyyy")
 
@@ -63,21 +61,21 @@ func Test_F3_Findx1A(t *testing.T) {
 	var data model.Foreign3
 	ctx := context.Background()
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
-		data, err = data.Find(dbt, 2)
+		data, err = data.Find(dbt, 4)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 
 	js, _ := json.MarshalIndent(data, " ", " ")
 	logger.Trace("data:", string(js))
 }
 
-func Test_F3_Updatex1C(t *testing.T) {
+func Test_F3_Updatex(t *testing.T) {
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s  sslmode=disable", "localhost", "5432",
 		"postgres_test", "xxxxxxx", "yyyyyy")
 
@@ -86,13 +84,11 @@ func Test_F3_Updatex1C(t *testing.T) {
 		logger.Level("panic", "Test", "failed connect to database:"+err.Error())
 	}
 
-	loc, _ := time.LoadLocation("Asia/Jakarta")
-	ts := time.Now().In(loc)
-
+	ts := time.Now().UTC()
 	ctx := context.Background()
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		dev := model.Devices{}
-		dev_master, err := dev.Find(dbt, "A0002")
+		dev_master, err := dev.Find(dbt, "A0001")
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
@@ -109,9 +105,8 @@ func Test_F3_Updatex1C(t *testing.T) {
 		}
 
 		data.ID = log.ID
-		data.CreatedAt = log.CreatedAt
-		data.UpdatedAt = ts
-		data.DeletedAt = log.DeletedAt
+		data.Model.Created_at = log.Created_at
+		data.Model.Deleted_at = log.Model.Deleted_at
 		js, _ := json.MarshalIndent(data, " ", " ")
 		logger.Trace("data:", string(js))
 
@@ -122,11 +117,11 @@ func Test_F3_Updatex1C(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 }
 
-func Test_F3_Deletedx1B(t *testing.T) {
+func Test_F3_Deletedx1C(t *testing.T) {
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s  sslmode=disable", "localhost", "5432",
 		"postgres_test", "xxxxxxx", "yyyyyy")
 
@@ -135,7 +130,7 @@ func Test_F3_Deletedx1B(t *testing.T) {
 		logger.Level("panic", "Test", "failed connect to database:"+err.Error())
 	}
 
-	dev_id := uint(1)
+	dev_id := uint(3)
 	ctx := context.Background()
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		data := model.Foreign3{}
@@ -152,6 +147,6 @@ func Test_F3_Deletedx1B(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 }

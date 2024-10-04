@@ -41,7 +41,7 @@ func Test_Dev_Createx2(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 }
 
@@ -64,7 +64,7 @@ func Test_Dev_Findx1B(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 
 	js, _ := json.MarshalIndent(data, " ", " ")
@@ -111,7 +111,7 @@ func Test_Dev_Updatex1B(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 }
 
@@ -141,6 +141,6 @@ func Test_Dev_Deletedx1A(t *testing.T) {
 		return nil
 	})
 	if errTx != nil {
-		logger.Level("error", "test", "DoTransaction->"+err.Error())
+		logger.Level("error", "test", "DoTransaction->"+errTx.Error())
 	}
 }
