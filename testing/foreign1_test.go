@@ -3,7 +3,6 @@ package testing_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"foreignKey/pkg/database/model"
 	"foreignKey/pkg/database/postgres"
@@ -59,7 +58,7 @@ func Test_F1_Findx2(t *testing.T) {
 	ctx := context.Background()
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		data, err = data.Find(dbt, 2)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 		return nil
@@ -88,7 +87,7 @@ func Test_F1_Updatex1B(t *testing.T) {
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		dev := model.Devices{}
 		dev_master, err := dev.Find(dbt, "A0001")
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 
@@ -99,7 +98,7 @@ func Test_F1_Updatex1B(t *testing.T) {
 			Data:       10,
 		}
 		log, err := data.Find(dbt, data.Device_PID)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 
@@ -111,7 +110,7 @@ func Test_F1_Updatex1B(t *testing.T) {
 		logger.Trace("data:", string(js))
 
 		err = data.Update(dbt)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 		return nil
@@ -135,7 +134,7 @@ func Test_F1_Deletedx1B(t *testing.T) {
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		data := model.Foreign1{}
 		log, err := data.Find(dbt, dev_id)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 

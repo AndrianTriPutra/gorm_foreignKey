@@ -3,7 +3,6 @@ package testing_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"foreignKey/pkg/database/model"
 	"foreignKey/pkg/database/postgres"
@@ -27,7 +26,7 @@ func Test_F2_Createx1a(t *testing.T) {
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		dev := model.Devices{}
 		log, err := dev.Find(dbt, "A0001")
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 
@@ -64,7 +63,7 @@ func Test_F2_Findx1(t *testing.T) {
 	ctx := context.Background()
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		data, err = data.Find(dbt, 1)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 		return nil
@@ -93,7 +92,7 @@ func Test_F2_Updatex1(t *testing.T) {
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		dev := model.Devices{}
 		dev_master, err := dev.Find(dbt, "A0002")
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 
@@ -104,7 +103,7 @@ func Test_F2_Updatex1(t *testing.T) {
 			Data:       10,
 		}
 		log, err := data.Find(dbt, dev_master.ID)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 
@@ -116,7 +115,7 @@ func Test_F2_Updatex1(t *testing.T) {
 		logger.Trace("data:", string(js))
 
 		err = data.Update(dbt)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 		return nil
@@ -140,7 +139,7 @@ func Test_F2_Deletedx2(t *testing.T) {
 	errTx := db.WithTransaction(ctx, func(ctxWithTx context.Context, dbt *gorm.DB) error {
 		data := model.Foreign2{}
 		log, err := data.Find(dbt, dev_id)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil {
 			return err
 		}
 
